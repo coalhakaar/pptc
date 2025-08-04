@@ -1,0 +1,70 @@
+#!/bin/bash
+
+# Usage instructions
+function usage() {
+  echo "Usage:"
+  echo "  pptc c <file>  || pptc compile <file>     Compile PowerPoint → ZIP"
+  echo "  pptc uc <file> || pptc uncompile <file>   Uncompile ZIP → PowerPoint"
+  echo "  pptc h         || pptc help               Show help"
+}
+
+function help() {
+  echo "Commands:"
+  echo "  pptc c <file>  || pptc compile <file>     Compile PowerPoint → ZIP"
+  echo "  pptc uc <file> || pptc uncompile <file>   Uncompile ZIP → PowerPoint"
+  echo "  pptc h         || pptc help               Show help"
+}
+
+
+# Compile function
+function compile_pptx() {
+  local input="$1"
+  local output="${input%.pptx}.zip"
+
+  if [[ ! -f "$input" ]]; then
+    echo "[X] File not found: $input"
+    exit 1
+  fi
+
+  cp "$input" "$output"
+  echo "[!] Compiled '$input' → '$output'"
+}
+
+# Uncompile function
+function uncompile_zip() {
+  local input="$1"
+  local output="${input%.*}.zip"
+
+  if [[ ! -f "$input" ]]; then
+    echo "[X] File not found: $input"
+    exit 1
+  fi
+
+  cp "$input" "$output"
+  echo "[!] Uncompiled '$input' → '$output'"
+}
+
+# CLI logic
+case "$1" in
+  c)
+    compile_pptx "$2"
+    ;;
+  compile)
+    compile_pptx "$2"
+    ;;
+  uc)
+    uncompile_zip "$2"
+    ;;
+  uncompile)
+    compile_pptx "$2"
+    ;;
+  *)
+    usage
+    ;;
+  h)
+    help
+    ;;
+  help)
+    help
+    ;;
+esac
